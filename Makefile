@@ -1,15 +1,20 @@
-.DEFAULT_GOAL := debug
+.DEFAULT_GOAL := all
 
 TARGET := save-organizer
 
-DEBUG   = .build/debug/$(TARGET)
-RELEASE = .build/release/$(TARGET)
+BUILD_DIR := .build
+STATIC_BUILD_DIR := $(BUILD_DIR)/x86_64-swift-linux-musl
+DEBUG_TARGET   := debug/$(TARGET)
+RELEASE_TARGET := release/$(TARGET)
+
+DEBUG   := $(BUILD_DIR)/$(DEBUG_TARGET)
+RELEASE := $(BUILD_DIR)/$(RELEASE_TARGET)
 
 DEBUG_FLAGS   :=
 RELEASE_FLAGS := -c release
 
-STATIC_DEBUG   := .build/x86_64-swift-linux-musl/debug/$(TARGET)
-STATIC_RELEASE := .build/x86_64-swift-linux-musl/release/$(TARGET)
+STATIC_DEBUG   := $(STATIC_BUILD_DIR)/$(DEBUG_TARGET)
+STATIC_RELEASE := $(STATIC_BUILD_DIR)/$(RELEASE_TARGET)
 
 STATIC_FLAGS := --swift-sdk x86_64-swift-linux-musl
 STATIC_DEBUG_FLAGS   := $(STATIC_FLAGS)
@@ -49,7 +54,8 @@ $(ZIPFILE): $(DEBUG) $(RELEASE) $(STATIC_DEBUG) $(STATIC_RELEASE)
 
 zip: $(ZIPFILE)
 
+CLEAN_TARGETS := $(DEBUG) $(RELEASE) $(STATIC_DEBUG) $(STATIC_RELEASE) $(ZIPFILE)
 clean:
-	$(foreach fi,$(DEBUG) $(RELEASE) $(STATIC_DEBUG) $(STATIC_RELEASE) $(ZIPFILE),rm -f $(fi);)
+	$(foreach fi,$(CLEAN_TARGETS),rm -f $(fi);)
 
 .PHONY := clean
