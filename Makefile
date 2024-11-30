@@ -54,6 +54,15 @@ $(ZIPFILE): $(DEBUG) $(RELEASE) $(STATIC_DEBUG) $(STATIC_RELEASE)
 
 zip: $(ZIPFILE)
 
+INSTALL_TARGET := ~/.swiftpm/bin/$(TARGET)
+$(INSTALL_TARGET): $(RELEASE) # You can change this to static if you'd like
+	cp $(RELEASE) $(INSTALL_TARGET)
+	strip $(INSTALL_TARGET)
+
+install: $(INSTALL_TARGET)
+uninstall: $(INSTALL_TARGET)
+	rm $(INSTALL_TARGET)
+
 CLEAN_TARGETS := $(DEBUG) $(RELEASE) $(STATIC_DEBUG) $(STATIC_RELEASE) $(ZIPFILE)
 clean:
 	$(foreach fi,$(CLEAN_TARGETS),rm -f $(fi);)
